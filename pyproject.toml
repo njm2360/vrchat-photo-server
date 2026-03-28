@@ -1,0 +1,21 @@
+[project]
+name = "vrc-photo-sever"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "fastapi>=0.135.2",
+    "fastapi-login>=1.10.3",
+    "python-jose[cryptography]>=3.5.0",
+    "httpx>=0.28.1",
+    "bcrypt>=5.0.0",
+    "pillow>=12.1.1",
+    "pydantic>=2.12.5",
+    "python-multipart>=0.0.22",
+]
+
+[dependency-groups]
+dev = [
+    "uvicorn>=0.42.0",
+]

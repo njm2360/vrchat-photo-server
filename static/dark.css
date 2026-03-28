@@ -1,0 +1,66 @@
+body {
+  background-color: #121212 !important;
+  color: #e0e0e0;
+}
+.navbar {
+  background-color: #1e1e1e !important;
+  border-bottom: 1px solid #333;
+}
+.navbar-brand {
+  color: #e0e0e0 !important;
+}
+.card {
+  --bs-card-color: #e0e0e0;
+  background-color: #1e1e1e;
+  border: 1px solid #333;
+  color: #e0e0e0;
+}
+.form-label {
+  color: #ccc;
+}
+.form-control,
+.form-select {
+  background-color: #2a2a2a;
+  border-color: #444;
+  color: #e0e0e0;
+}
+.form-control:focus,
+.form-select:focus {
+  background-color: #2a2a2a;
+  border-color: #0d6efd;
+  color: #e0e0e0;
+  box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+.form-control::placeholder {
+  color: #888;
+}
+.form-select option {
+  background-color: #2a2a2a;
+  color: #e0e0e0;
+}
+.input-group .form-control[readonly] {
+  background-color: #2a2a2a;
+  color: #e0e0e0;
+}
+.nav-link {
+  color: #aaa !important;
+}
+.nav-link:hover {
+  color: #e0e0e0 !important;
+}
+.nav-link.active {
+  color: #fff !important;
+  border-bottom: 2px solid #0d6efd;
+}
+.text-muted {
+  color: #888 !important;
+}
+.btn-outline-secondary {
+  color: #aaa;
+  border-color: #555;
+}
+.btn-outline-secondary:hover {
+  color: #fff;
+  background-color: #444;
+  border-color: #666;
+}

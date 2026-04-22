@@ -1,0 +1,22 @@
+services:
+  image-server:
+    build: .
+    container_name: image-server
+    volumes:
+      - image_data:/app/data
+    networks:
+      - photo_server_nw
+    restart: unless-stopped
+    environment:
+      - BASE_URL=${BASE_URL}
+  cloudflared:
+    image: cloudflare/cloudflared
+    container_name: cloudflared
+    command: tunnel run --token ${CLOUDFLARE_TUNNEL_TOKEN}
+    networks:
+      - photo_server_nw
+    restart: unless-stopped
+networks:
+  photo_server_nw:
+volumes:
+  image_data:

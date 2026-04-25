@@ -1,5 +1,4 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
-import { useNavigate } from 'react-router'
 import {
   listProxyHosts,
   createProxyHost,
@@ -56,7 +55,6 @@ function Pagination({
 }
 
 export default function AdminProxyHostsPage() {
-  const navigate = useNavigate()
   const [items, setItems] = useState<ProxyAllowedHost[]>([])
   const [total, setTotal] = useState(0)
   const [offset, setOffset] = useState(0)
@@ -188,9 +186,6 @@ export default function AdminProxyHostsPage() {
   return (
     <div className="max-w-5xl mx-auto">
       <div className="flex flex-wrap items-center gap-2 mb-4">
-        <button onClick={() => void navigate('/admin/users')} className={btnCls}>
-          ← ユーザー管理に戻る
-        </button>
         <input
           type="text"
           value={patternSearch}

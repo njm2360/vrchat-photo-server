@@ -75,7 +75,7 @@ export default function Layout() {
             </button>
 
             {menuOpen && (
-              <div className="absolute right-0 mt-2 w-44 bg-[#2a2a2a] border border-[#444] rounded shadow-lg z-50">
+              <div className="absolute right-0 mt-2 w-48 bg-[#2a2a2a] border border-[#444] rounded shadow-lg z-50">
                 <button
                   onClick={openRename}
                   className="w-full text-left px-4 py-2 text-sm text-[#ccc] hover:bg-[#333] hover:text-white"

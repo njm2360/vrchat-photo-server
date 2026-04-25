@@ -7,9 +7,9 @@ import (
 	"golang.org/x/crypto/bcrypt"
 
 	"github.com/go-chi/chi/v5"
-	"github.com/owner/vps/internal/db"
-	appjwt "github.com/owner/vps/internal/jwt"
-	"github.com/owner/vps/internal/middleware"
+	"github.com/njm2360/vrchat-photo-server/internal/db"
+	appjwt "github.com/njm2360/vrchat-photo-server/internal/jwt"
+	"github.com/njm2360/vrchat-photo-server/internal/middleware"
 )
 
 func (h *AdminHandler) CheckUsername(w http.ResponseWriter, r *http.Request) {

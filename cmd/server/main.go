@@ -14,10 +14,10 @@ import (
 	chimw "github.com/go-chi/chi/v5/middleware"
 	"golang.org/x/crypto/bcrypt"
 
-	"github.com/owner/vps/internal/db"
-	"github.com/owner/vps/internal/handler"
-	"github.com/owner/vps/internal/middleware"
-	"github.com/owner/vps/internal/ratelimit"
+	"github.com/njm2360/vrchat-photo-server/internal/db"
+	"github.com/njm2360/vrchat-photo-server/internal/handler"
+	"github.com/njm2360/vrchat-photo-server/internal/middleware"
+	"github.com/njm2360/vrchat-photo-server/internal/ratelimit"
 )
 
 func main() {

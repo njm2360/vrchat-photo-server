@@ -7,8 +7,8 @@ import (
 	"time"
 
 	"github.com/go-chi/chi/v5"
-	"github.com/owner/vps/internal/db"
-	"github.com/owner/vps/internal/middleware"
+	"github.com/njm2360/vrchat-photo-server/internal/db"
+	"github.com/njm2360/vrchat-photo-server/internal/middleware"
 )
 
 func (h *AdminHandler) ListProxyHosts(w http.ResponseWriter, r *http.Request) {

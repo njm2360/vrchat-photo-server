@@ -1,4 +1,4 @@
-module github.com/owner/vps
+module github.com/njm2360/vrchat-photo-server
 
 go 1.26.2
 

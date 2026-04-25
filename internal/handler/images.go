@@ -11,9 +11,9 @@ import (
 
 	"github.com/go-chi/chi/v5"
 
-	"github.com/owner/vps/internal/db"
-	"github.com/owner/vps/internal/imgproc"
-	"github.com/owner/vps/internal/middleware"
+	"github.com/njm2360/vrchat-photo-server/internal/db"
+	"github.com/njm2360/vrchat-photo-server/internal/imgproc"
+	"github.com/njm2360/vrchat-photo-server/internal/middleware"
 )
 
 const maxUploadBytes = 50 << 20 // 50 MB

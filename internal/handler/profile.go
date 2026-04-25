@@ -6,8 +6,8 @@ import (
 
 	"golang.org/x/crypto/bcrypt"
 
-	"github.com/owner/vps/internal/db"
-	"github.com/owner/vps/internal/middleware"
+	"github.com/njm2360/vrchat-photo-server/internal/db"
+	"github.com/njm2360/vrchat-photo-server/internal/middleware"
 )
 
 type ProfileHandler struct {

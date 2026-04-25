@@ -7,7 +7,7 @@ import (
 
 	"github.com/go-chi/chi/v5"
 
-	"github.com/owner/vps/internal/db"
+	"github.com/njm2360/vrchat-photo-server/internal/db"
 )
 
 type FilesHandler struct {

@@ -6,7 +6,7 @@ import (
 	"strings"
 	"time"
 
-	appjwt "github.com/owner/vps/internal/jwt"
+	appjwt "github.com/njm2360/vrchat-photo-server/internal/jwt"
 )
 
 type contextKey int

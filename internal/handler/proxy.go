@@ -13,11 +13,11 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/owner/vps/internal/db"
-	"github.com/owner/vps/internal/imgproc"
-	"github.com/owner/vps/internal/middleware"
-	"github.com/owner/vps/internal/ratelimit"
-	"github.com/owner/vps/internal/security"
+	"github.com/njm2360/vrchat-photo-server/internal/db"
+	"github.com/njm2360/vrchat-photo-server/internal/imgproc"
+	"github.com/njm2360/vrchat-photo-server/internal/middleware"
+	"github.com/njm2360/vrchat-photo-server/internal/ratelimit"
+	"github.com/njm2360/vrchat-photo-server/internal/security"
 )
 
 const maxProxyBytes = 50 << 20

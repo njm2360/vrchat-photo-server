@@ -7,10 +7,10 @@ import (
 
 	"golang.org/x/crypto/bcrypt"
 
-	"github.com/owner/vps/internal/db"
-	appjwt "github.com/owner/vps/internal/jwt"
-	"github.com/owner/vps/internal/middleware"
-	"github.com/owner/vps/internal/ratelimit"
+	"github.com/njm2360/vrchat-photo-server/internal/db"
+	appjwt "github.com/njm2360/vrchat-photo-server/internal/jwt"
+	"github.com/njm2360/vrchat-photo-server/internal/middleware"
+	"github.com/njm2360/vrchat-photo-server/internal/ratelimit"
 )
 
 type AuthHandler struct {

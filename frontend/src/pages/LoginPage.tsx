@@ -7,17 +7,16 @@ import { useAuth } from '../hooks/useAuth'
 export default function LoginPage() {
   const navigate = useNavigate()
   const { updateAuth } = useAuth()
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
 
-  async function handleAction(formData: FormData) {
+  async function handleSubmit() {
     setError('')
     setLoading(true)
     try {
-      const data = await login(
-        formData.get('username') as string,
-        formData.get('password') as string,
-      )
+      const data = await login(username, password)
       setAccessToken(data.access_token)
       updateAuth(data.username, data.is_admin)
       navigate('/upload', { replace: true })
@@ -31,6 +30,7 @@ export default function LoginPage() {
       } else {
         setError('ネットワークエラーが発生しました')
       }
+      setPassword('')
     } finally {
       setLoading(false)
     }
@@ -42,7 +42,7 @@ export default function LoginPage() {
         <h1 className="text-xl font-semibold text-[#e0e0e0] mb-6 text-center">
           ログイン
         </h1>
-        <form action={handleAction} className="flex flex-col gap-4">
+        <form onSubmit={(e) => { e.preventDefault(); void handleSubmit() }} className="flex flex-col gap-4">
           <div className="flex flex-col gap-1">
             <label className="text-sm text-[#aaa]" htmlFor="username">
               ユーザー名
@@ -53,6 +53,8 @@ export default function LoginPage() {
               type="text"
               required
               autoComplete="username"
+              value={username}
+              onChange={e => setUsername(e.target.value)}
               className="bg-[#2a2a2a] border border-[#444] rounded px-3 py-2 text-[#e0e0e0] text-sm focus:outline-none focus:border-[#0d6efd]"
             />
           </div>
@@ -66,6 +68,8 @@ export default function LoginPage() {
               type="password"
               required
               autoComplete="current-password"
+              value={password}
+              onChange={e => setPassword(e.target.value)}
               className="bg-[#2a2a2a] border border-[#444] rounded px-3 py-2 text-[#e0e0e0] text-sm focus:outline-none focus:border-[#0d6efd]"
             />
           </div>

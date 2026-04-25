@@ -1,16 +1,16 @@
-import { Routes, Route, Navigate } from 'react-router'
-import { AuthProvider } from './hooks/useAuth'
-import AuthGuard from './components/AuthGuard'
-import AdminGuard from './components/AdminGuard'
-import Layout from './components/Layout'
-import LoginPage from './pages/LoginPage'
-import UploadPage from './pages/UploadPage'
-import ImagesPage from './pages/ImagesPage'
-import ProfilePage from './pages/ProfilePage'
-import AdminUsersPage from './pages/AdminUsersPage'
-import AdminUserImagesPage from './pages/AdminUserImagesPage'
-import AdminProxyCachePage from './pages/AdminProxyCachePage'
-import AdminProxyHostsPage from './pages/AdminProxyHostsPage'
+import { Routes, Route, Navigate } from "react-router";
+import { AuthProvider } from "./hooks/useAuth";
+import AuthGuard from "./components/AuthGuard";
+import AdminGuard from "./components/AdminGuard";
+import Layout from "./components/Layout";
+import LoginPage from "./pages/LoginPage";
+import UploadPage from "./pages/UploadPage";
+import ImagesPage from "./pages/ImagesPage";
+import ProfilePage from "./pages/ProfilePage";
+import AdminUsersPage from "./pages/AdminUsersPage";
+import AdminUserImagesPage from "./pages/AdminUserImagesPage";
+import AdminProxyCachePage from "./pages/AdminProxyCachePage";
+import AdminProxyHostsPage from "./pages/AdminProxyHostsPage";
 
 export default function App() {
   return (
@@ -64,5 +64,5 @@ export default function App() {
         <Route path="*" element={<Navigate to="/upload" replace />} />
       </Routes>
     </AuthProvider>
-  )
+  );
 }

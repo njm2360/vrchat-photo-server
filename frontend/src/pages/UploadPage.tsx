@@ -1,115 +1,120 @@
-import { useState, useRef, type FormEvent, type DragEvent } from 'react'
-import { uploadImage, type ImageItem } from '../api/images'
-import { ApiError } from '../api/client'
-import { useAuth } from '../hooks/useAuth'
+import { useState, useRef, useEffect, type FormEvent } from "react";
+import { uploadImage, type ImageItem } from "../api/images";
+import { ApiError } from "../api/client";
+import { useAuth } from "../hooks/useAuth";
 
-const ACCEPTED_TYPES = '.jpg,.jpeg,.png,.gif,.bmp,.webp,.tif,.tiff'
+const ACCEPTED_TYPES = ".jpg,.jpeg,.png,.gif,.bmp,.webp,.tif,.tiff";
 
 export default function UploadPage() {
-  const { logout } = useAuth()
-  const fileInputRef = useRef<HTMLInputElement>(null)
+  const { logout } = useAuth();
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const [file, setFile] = useState<File | null>(null)
-  const [maxWidth, setMaxWidth] = useState(2048)
-  const [maxHeight, setMaxHeight] = useState(2048)
-  const [rotate, setRotate] = useState(0)
-  const [expireDays, setExpireDays] = useState(7)
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState('')
-  const [result, setResult] = useState<ImageItem | null>(null)
-  const [copied, setCopied] = useState(false)
-  const [dragCounter, setDragCounter] = useState(0)
+  const [file, setFile] = useState<File | null>(null);
+  const [maxWidth, setMaxWidth] = useState(2048);
+  const [maxHeight, setMaxHeight] = useState(2048);
+  const [rotate, setRotate] = useState(0);
+  const [expireDays, setExpireDays] = useState(7);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [result, setResult] = useState<ImageItem | null>(null);
+  const [copied, setCopied] = useState(false);
+  const [dragOver, setDragOver] = useState(false);
 
-  function handleDragEnter(e: DragEvent) {
-    e.preventDefault()
-    setDragCounter((c) => c + 1)
-  }
-
-  function handleDragLeave(e: DragEvent) {
-    e.preventDefault()
-    setDragCounter((c) => c - 1)
-  }
-
-  function handleDragOver(e: DragEvent) {
-    e.preventDefault()
-  }
-
-  function handleDrop(e: DragEvent) {
-    e.preventDefault()
-    setDragCounter(0)
-    const dropped = e.dataTransfer.files[0]
-    if (dropped && dropped.type.startsWith('image/')) {
-      setFile(dropped)
-      if (fileInputRef.current) {
-        const dt = new DataTransfer()
-        dt.items.add(dropped)
-        fileInputRef.current.files = dt.files
+  useEffect(() => {
+    let counter = 0;
+    function onDragEnter(e: DragEvent) {
+      e.preventDefault();
+      counter++;
+      setDragOver(true);
+    }
+    function onDragLeave(e: DragEvent) {
+      e.preventDefault();
+      counter--;
+      if (counter === 0) setDragOver(false);
+    }
+    function onDragOver(e: DragEvent) {
+      e.preventDefault();
+    }
+    function onDrop(e: DragEvent) {
+      e.preventDefault();
+      counter = 0;
+      setDragOver(false);
+      const dropped = e.dataTransfer?.files[0];
+      if (dropped && dropped.type.startsWith("image/")) {
+        setFile(dropped);
+        if (fileInputRef.current) {
+          const dt = new DataTransfer();
+          dt.items.add(dropped);
+          fileInputRef.current.files = dt.files;
+        }
       }
     }
-  }
+    window.addEventListener("dragenter", onDragEnter);
+    window.addEventListener("dragleave", onDragLeave);
+    window.addEventListener("dragover", onDragOver);
+    window.addEventListener("drop", onDrop);
+    return () => {
+      window.removeEventListener("dragenter", onDragEnter);
+      window.removeEventListener("dragleave", onDragLeave);
+      window.removeEventListener("dragover", onDragOver);
+      window.removeEventListener("drop", onDrop);
+    };
+  }, []);
 
   async function handleSubmit(e: FormEvent) {
-    e.preventDefault()
-    if (!file) return
-    setError('')
-    setResult(null)
-    setLoading(true)
+    e.preventDefault();
+    if (!file) return;
+    setError("");
+    setResult(null);
+    setLoading(true);
     try {
-      const fd = new FormData()
-      fd.append('file', file)
-      fd.append('max_width', String(maxWidth))
-      fd.append('max_height', String(maxHeight))
-      fd.append('rotate', String(rotate))
-      fd.append('expire_days', String(expireDays))
-      const img = await uploadImage(fd)
-      setResult(img)
+      const fd = new FormData();
+      fd.append("file", file);
+      fd.append("max_width", String(maxWidth));
+      fd.append("max_height", String(maxHeight));
+      fd.append("rotate", String(rotate));
+      fd.append("expire_days", String(expireDays));
+      const img = await uploadImage(fd);
+      setResult(img);
     } catch (err) {
       if (err instanceof ApiError && err.status === 401) {
-        await logout()
+        await logout();
       } else {
-        setError(err instanceof Error ? err.message : 'アップロードに失敗しました')
+        setError(err instanceof Error ? err.message : "アップロードに失敗しました");
       }
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
   }
 
   function handleReset() {
-    setFile(null)
-    setResult(null)
-    setError('')
-    if (fileInputRef.current) fileInputRef.current.value = ''
+    setFile(null);
+    setResult(null);
+    setError("");
+    if (fileInputRef.current) fileInputRef.current.value = "";
   }
 
   async function copyUrl() {
-    if (!result) return
-    await navigator.clipboard.writeText(result.url)
-    setCopied(true)
-    setTimeout(() => setCopied(false), 2000)
+    if (!result) return;
+    await navigator.clipboard.writeText(result.url);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
   }
 
   const inputClass =
-    'bg-[#2a2a2a] border border-[#444] rounded px-3 py-1.5 text-[#e0e0e0] text-sm focus:outline-none focus:border-[#0d6efd] w-full'
-  const labelClass = 'text-sm text-[#aaa] mb-1 block'
+    "bg-[#2a2a2a] border border-[#444] rounded px-3 py-1.5 text-[#e0e0e0] text-sm focus:outline-none focus:border-[#0d6efd] w-full";
+  const labelClass = "text-sm text-[#aaa] mb-1 block";
 
   return (
-    <div
-      className="relative"
-      onDragEnter={handleDragEnter}
-      onDragLeave={handleDragLeave}
-      onDragOver={handleDragOver}
-      onDrop={handleDrop}
-    >
-      {dragCounter > 0 && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 border-4 border-dashed border-[#0d6efd] pointer-events-none">
-          <span className="text-white text-xl font-medium">
-            ここにドロップしてアップロード
-          </span>
+    <div className="relative">
+      {dragOver && (
+        <div className="pointer-events-none fixed inset-0 z-50 flex items-center justify-center border-4 border-dashed border-[#0d6efd] bg-black/60">
+          <span className="text-xl font-medium text-white">ここにドロップしてアップロード</span>
         </div>
       )}
 
-      <div className="max-w-lg mx-auto">
-        <div className="bg-[#1e1e1e] border border-[#333] rounded-lg p-6">
+      <div className="mx-auto max-w-lg">
+        <div className="rounded-lg border border-[#333] bg-[#1e1e1e] p-6">
           <form onSubmit={(e) => void handleSubmit(e)} className="flex flex-col gap-4">
             <div>
               <label className={labelClass} htmlFor="file">
@@ -122,7 +127,7 @@ export default function UploadPage() {
                 accept={ACCEPTED_TYPES}
                 required
                 onChange={(e) => setFile(e.target.files?.[0] ?? null)}
-                className="text-sm text-[#aaa] file:mr-3 file:py-1.5 file:px-3 file:rounded file:border-0 file:text-sm file:bg-[#2a2a2a] file:text-[#e0e0e0] file:cursor-pointer w-full"
+                className="w-full text-sm text-[#aaa] file:mr-3 file:cursor-pointer file:rounded file:border-0 file:bg-[#2a2a2a] file:px-3 file:py-1.5 file:text-sm file:text-[#e0e0e0]"
               />
             </div>
 
@@ -193,43 +198,43 @@ export default function UploadPage() {
               </div>
             </div>
 
-            {error && <p className="text-red-400 text-sm">{error}</p>}
+            {error && <p className="text-sm text-red-400">{error}</p>}
 
             <button
               type="submit"
               disabled={loading}
-              className="bg-[#0d6efd] hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed text-white rounded px-4 py-2 text-sm font-medium cursor-pointer"
+              className="cursor-pointer rounded bg-[#0d6efd] px-4 py-2 text-sm font-medium text-white hover:bg-blue-600 disabled:cursor-not-allowed disabled:opacity-50"
             >
-              {loading ? 'アップロード中...' : 'アップロード'}
+              {loading ? "アップロード中..." : "アップロード"}
             </button>
           </form>
         </div>
 
         {result && (
-          <div className="mt-4 bg-[#1e1e1e] border border-[#333] rounded-lg p-6">
-            <div className="flex items-center justify-between mb-3">
+          <div className="mt-4 rounded-lg border border-[#333] bg-[#1e1e1e] p-6">
+            <div className="mb-3 flex items-center justify-between">
               <p className="text-sm text-[#aaa]">アップロード完了</p>
               <button
                 type="button"
                 onClick={handleReset}
-                className="text-xs px-2 py-1 rounded border border-[#444] text-[#aaa] hover:text-[#e0e0e0] hover:bg-[#2a2a2a] cursor-pointer"
+                className="cursor-pointer rounded border border-[#444] px-2 py-1 text-xs text-[#aaa] hover:bg-[#2a2a2a] hover:text-[#e0e0e0]"
               >
                 別の画像をアップロード
               </button>
             </div>
-            <div className="flex gap-2 mb-4">
+            <div className="mb-4 flex gap-2">
               <input
                 type="text"
                 readOnly
                 value={result.url}
                 onClick={(e) => (e.target as HTMLInputElement).select()}
-                className="flex-1 bg-[#2a2a2a] border border-[#444] rounded px-3 py-1.5 text-[#e0e0e0] text-sm focus:outline-none"
+                className="flex-1 rounded border border-[#444] bg-[#2a2a2a] px-3 py-1.5 text-sm text-[#e0e0e0] focus:outline-none"
               />
               <button
                 onClick={() => void copyUrl()}
-                className="px-3 py-1.5 rounded border border-[#444] text-sm text-[#e0e0e0] hover:bg-[#2a2a2a] cursor-pointer whitespace-nowrap"
+                className="cursor-pointer rounded border border-[#444] px-3 py-1.5 text-sm whitespace-nowrap text-[#e0e0e0] hover:bg-[#2a2a2a]"
               >
-                {copied ? 'コピーしました' : 'コピー'}
+                {copied ? "コピーしました" : "コピー"}
               </button>
             </div>
             <a href={result.url} target="_blank" rel="noreferrer">
@@ -243,5 +248,5 @@ export default function UploadPage() {
         )}
       </div>
     </div>
-  )
+  );
 }

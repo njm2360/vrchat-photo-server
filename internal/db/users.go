@@ -242,6 +242,26 @@ func DeleteUser(sqlDB *sql.DB, dataDir, userID string) error {
 	return err
 }
 
+func GetAdminUsers(db *sql.DB) ([]User, error) {
+	rows, err := db.Query(
+		`SELECT id, username, pass_hash, created_at, is_admin, is_disabled, last_login_at
+		 FROM users WHERE is_admin = 1`,
+	)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var out []User
+	for rows.Next() {
+		u, err := scanUser(rows.Scan)
+		if err != nil {
+			return nil, err
+		}
+		out = append(out, *u)
+	}
+	return out, rows.Err()
+}
+
 func CountUsers(db *sql.DB) (int, error) {
 	var n int
 	err := db.QueryRow(`SELECT COUNT(*) FROM users`).Scan(&n)

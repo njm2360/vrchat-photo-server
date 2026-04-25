@@ -4,6 +4,8 @@ import (
 	"crypto/rand"
 	"database/sql"
 	"encoding/base64"
+	"flag"
+	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -21,6 +23,9 @@ import (
 )
 
 func main() {
+	resetPW := flag.Bool("reset-admin-password", false, "reset the oldest admin user's password and exit")
+	flag.Parse()
+
 	baseURL := getEnv("BASE_URL", "http://localhost:8000")
 	dataDir := getEnv("DATA_DIR", "./data")
 
@@ -32,6 +37,13 @@ func main() {
 		log.Fatalf("open db: %v", err)
 	}
 	defer sqlDB.Close()
+
+	if *resetPW {
+		if err := resetAdminPassword(sqlDB); err != nil {
+			log.Fatalf("reset admin password: %v", err)
+		}
+		return
+	}
 
 	if err := ensureAdminUser(sqlDB); err != nil {
 		log.Fatalf("ensure admin user: %v", err)
@@ -181,6 +193,38 @@ func spaHandler(dir string) http.Handler {
 		}
 		http.ServeFile(w, r, dir+"/index.html")
 	})
+}
+
+func resetAdminPassword(sqlDB *sql.DB) error {
+	admins, err := db.GetAdminUsers(sqlDB)
+	if err != nil {
+		return err
+	}
+	if len(admins) == 0 {
+		return fmt.Errorf("no admin users found")
+	}
+
+	target := &admins[0]
+	for i := range admins {
+		if admins[i].CreatedAt.Before(target.CreatedAt) {
+			target = &admins[i]
+		}
+	}
+
+	raw := make([]byte, 18)
+	if _, err := rand.Read(raw); err != nil {
+		return err
+	}
+	password := base64.RawURLEncoding.EncodeToString(raw)
+	hash, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+	if err != nil {
+		return err
+	}
+	if err := db.UpdatePassword(sqlDB, target.ID, string(hash)); err != nil {
+		return err
+	}
+	fmt.Printf("admin password reset — username: %s  password: %s\n", target.Username, password)
+	return nil
 }
 
 func ensureAdminUser(sqlDB *sql.DB) error {
